@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+"""Interpolation
+"""
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -77,14 +79,21 @@ def approximation(abscissa,ordinate,x):
   #An outcome of the value of the function
   Outcome=0
   List_abscissa,Zoom_coefficient=zoom(abscissa)#Function zoom, ensure all inputs are integers
-  Numbers_of_wavelets=int(List_abscissa[-1])+1
-  Dilation_coefficients=np.zeros(Numbers_of_wavelets)
-  for i in range(int(len(abscissa))):
-    Dilation_coefficients[int(List_abscissa[i])]=ordinate[i]#The existing coefficients according to sample points
+  if List_abscissa[0]>0:
+    Number_of_wavelets=int(List_abscissa[-1])-int(List_abscissa[0])+2
+    Dilation_coefficients=np.zeros(Number_of_wavelets)
+    for i in range(int(len(abscissa))):
+      Dilation_coefficients[int(List_abscissa[i])]=s[i]#The existing coefficients according to sample points
+  else:
+    Number_of_wavelets=int(List_abscissa[-1])-int(List_abscissa[0])+1
+    Dilation_coefficients=np.zeros(Number_of_wavelets)
+    for i in range(int(len(abscissa))):
+        Dilation_coefficients[int(List_abscissa[i])-int(List_abscissa[0])]=s[i]#The existing coefficients according to sample points
   List_dilation_coefficients=Dilation_coefficients.tolist()
   New_dilation_coefficients=supplement(List_dilation_coefficients,ordinate)#Assign values to other coefficients
-  for k in range(Numbers_of_wavelets):
-    Outcome += New_dilation_coefficients[k]*phi(x-k)# The approximating function
+  Abscissa=np.arange(int(List_abscissa[0]),int(List_abscissa[-1]+1))
+  for k in range(len(Abscissa)):
+    Outcome += New_dilation_coefficients[k]*phi(x-Abscissa[k])# The approximating function
   return Outcome
 
 #Interpolating function
